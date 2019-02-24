@@ -2,7 +2,7 @@
 #define ADS1115_COMM_h
 
 #include <Adafruit_ADS1015.h>
-#include <vector>
+// #include <vector>
 
 class ADS1115_COMM{
 
@@ -10,7 +10,7 @@ class ADS1115_COMM{
 	private: 
 		int numDevices = 4;
 		uint8_t addrArray[4];
-		vector <DeviceChannel2Scan> deviceChannel2Scan;
+		// vector <DeviceChannel2Scan> deviceChannel2Scan;
 		
 		Adafruit_ADS1115 ads1;
         Adafruit_ADS1115 ads2;
@@ -22,7 +22,7 @@ class ADS1115_COMM{
         Adafruit_ADS1115 adsArray[4];
 
 		ADS1115_COMM();
-		addDeviceChannel(String, int)
+		// addDeviceChannel(String, int)
         void scanSingleEnded();
 		float sixteenBitToAnalogConversion(int);
 
@@ -31,13 +31,13 @@ class ADS1115_COMM{
 		float mapFloat(float, float, float, float, float);
 };
 
-struct DeviceChannel2Scan
-{
-	public:
-		DeviceChannel2Scan(Adafruit_ADS1115*, int)
-		Adafruit_ADS1115* device;
-		int channel;
-};
+// struct DeviceChannel2Scan
+// {
+// 	public:
+// 		DeviceChannel2Scan(Adafruit_ADS1115*, int)
+// 		Adafruit_ADS1115* device;
+// 		int channel;
+// };
 
 
 #endif
