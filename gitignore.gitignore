@@ -1,6 +1,7 @@
 ########### Excluding downloaded libraries############
 
-/Adafruit_ADS1X15/*
-/WebSockets/*
-/test/*
+_Adafruit_ADS1X15/*
+_WebSockets/*
+test/*
+__StandardCplusplus-master/*
 
