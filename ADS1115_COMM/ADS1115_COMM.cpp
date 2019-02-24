@@ -1,11 +1,16 @@
 #include "ADS1115_COMM.h"
 
 
-const uint8_t deviceAddress1 = 0b1001000; // GND
-const uint8_t deviceAddress2 = 0b1001001; // VDD
-const uint8_t deviceAddress3 = 0b1001010; // SDA
-const uint8_t deviceAddress4 = 0b1001011; // SCL
+#define uint8_t deviceAddress1 0b1001000; // GND
+#define uint8_t deviceAddress2 0b1001001; // VDD
+#define uint8_t deviceAddress3 0b1001010; // SDA
+#define uint8_t deviceAddress4 0b1001011; // SCL
 const uint8_t deviceAddresses[] {deviceAddress2,deviceAddress1,deviceAddress3,deviceAddress4};
+
+DeviceChannel2Scan::DeviceChannel2Scan(Adafruit_ADS1115* device, int channel){
+    this->device = device;
+    this->channel = channel;
+}
 
 ADS1115_COMM::ADS1115_COMM () {
 	// this -> numDevices = numDevices;
@@ -50,12 +55,37 @@ ADS1115_COMM::ADS1115_COMM () {
 
 }
 
+void ADS1115_COMM::addDeviceChannel(String deviceAddr, int channel) {
+    Adafruit_ADS1115* device;
+    switch (deviceAddr)
+    {
+        case "GND"
+            device = ads1;
+            break;
+        case "VDD"
+            device = ads2;
+            break;
+        case "SDA"
+            device = ads3;
+            break;
+        case "SCL"
+            device = ads4;
+            break;
+        default:
+            Serial.println("something is wrong: Error - 9001");
+            break;
+    }
+    deviceChannel2Scan.push_back(DeviceChannel2Scan(device, channel));
+}
+
+
 float ADS1115_COMM::mapFloat(float val, float fromLow, float fromHigh, float toLow, float toHigh) {
     return (val - fromLow) / (fromHigh - fromLow) * (toHigh - toLow) + toLow;
 }
 
 
 void ADS1115_COMM::scanSingleEnded() {
+
     int numChannel = 4;
     for (int i = 0; i < numDevices; i++){ 
         for (int j = 0; j < numChannel  ; j++) {

@@ -1,0 +1,6 @@
+########### Excluding downloaded libraries############
+
+/Adafruit_ADS1X15/*
+/WebSockets/*
+/test/*
+
