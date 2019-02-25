@@ -9,7 +9,7 @@ class ADS1115_COMM{
 	
 	private: 
 		int numDevices = 4;
-		uint8_t addrArray[4];
+		uint8_t deviceAddresses[];
 		// vector <DeviceChannel2Scan> deviceChannel2Scan;
 		
 		Adafruit_ADS1115 ads1;
@@ -20,7 +20,8 @@ class ADS1115_COMM{
 		uint16_t rawInputs[4][4];
 		float analogValues[4][4];
         Adafruit_ADS1115 adsArray[4];
-
+		void setup();
+		void loop();
 		ADS1115_COMM();
 		// addDeviceChannel(String, int)
         void scanSingleEnded();

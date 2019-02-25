@@ -3,12 +3,12 @@
 
 #include "Function_Block.h"
 
-class AI_BLOCK: public Function_Block
+class AI_BLOCK
 {
 private:
-    IO_IN io_in;
+    Analog_IO_IN io_in;
     float field_val;
-    // scaling struct
+    ADS1115_COMM* card;
     SCALE xd_scale;
     bool simulate_enable = false;
     float simulate_val = 0;
@@ -16,8 +16,7 @@ private:
     float out;
     SCALE out_scale;
 public:
-    AI_BLOCK(int);
-    AI_BLOCK(int, int);
+    AI_BLOCK(ADS1115_COMM*, int, int);
     ~AI_BLOCK();
     float scan();
     void loop();
@@ -32,7 +31,7 @@ public:
     void setOutScale(SCALE);
     void setOutScale(float, float);
     // interfacing with IO
-    void set_io_pin_in(int);
+    void set_io_pin_in(ADS1115_COMM*, int, int);
 };
 
 

@@ -1,19 +1,12 @@
 #include "AI_BLOCK.h"
 
 
-AI_BLOCK::AI_BLOCK(int pin)
-{
-    set_io_pin_in(pin);
-}
-
 AI_BLOCK::~AI_BLOCK()
 {
 }
 
-AI_BLOCK::AI_BLOCK(int device, int channel) {
-    // input from ADS1115 Devices, max 4 devices on segment,
-    // input device number and channnel to be scanned.
-    ////TODO need a master ADS1115 pulling class////
+AI_BLOCK::AI_BLOCK(ADS1115_COMM* card, int device, int channel) {
+    set_io_pin_in(card, device, channel);
 }
 
 // scan implementation
@@ -24,7 +17,7 @@ float AI_BLOCK::scan() {
     // produces different scan function
     // this should be standardized once IO cards are finalized.
     // right now assuming direct interfacing with arduino
-    result = analogRead(io_in.pin);
+    result = io_in.card->readAnalogValueFrom(io_in.device, io_in.channel);
     return result;
 }
 // setup implementation
@@ -79,6 +72,8 @@ void AI_BLOCK::setOutScale(float low, float high) {
 }
 
 //interfacing with IO
-void AI_BLOCK::set_io_pin_in(int pin) {
-    io_in.pin = pin;
+void AI_BLOCK::set_io_pin_in(ADS1115_COMM* card, int device, int channel) {
+    io_in.card = card;
+    io_in.device = device;
+    io_in.channel = channel;
 }

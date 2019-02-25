@@ -15,7 +15,7 @@ private:
     bool simulate_d = 0;
     bool pv_d;
     bool out_d;
-    IO_IN io_in;
+    Digital_IO_IN io_in;
 
 public:
     DI_BLOCK(int);

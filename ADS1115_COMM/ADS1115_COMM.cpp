@@ -5,27 +5,33 @@ const uint8_t deviceAddress1 {0b1001000}; // GND
 const uint8_t deviceAddress2 {0b1001001}; // VDD
 const uint8_t deviceAddress3 {0b1001010}; // SDA
 const uint8_t deviceAddress4 {0b1001011}; // SCL
-const uint8_t deviceAddresses[] {deviceAddress2,deviceAddress1,deviceAddress3,deviceAddress4};
-
-// DeviceChannel2Scan::DeviceChannel2Scan(Adafruit_ADS1115* device, int channel){
-//     this->device = device;
-//     this->channel = channel;
-// }
+const uint8_t deviceAddresses[] {deviceAddress1,deviceAddress2,deviceAddress3,deviceAddress4};
 
 ADS1115_COMM::ADS1115_COMM () {
-	// this -> numDevices = numDevices;
-
-	for (int i = 0; i < numDevices; ++i)
-	{
-		addrArray[i] = deviceAddresses[i];
-	}
-    
     ads1 = Adafruit_ADS1115(deviceAddress1);
     ads2 = Adafruit_ADS1115(deviceAddress2);
     ads3 = Adafruit_ADS1115(deviceAddress3);
     ads4 = Adafruit_ADS1115(deviceAddress4);
 
-    // The ADC input range (or gain) can be changed via the following
+}
+
+float ADS1115_COMM::mapFloat(float val, float fromLow, float fromHigh, float toLow, float toHigh) {
+    return (val - fromLow) / (fromHigh - fromLow) * (toHigh - toLow) + toLow;
+}
+
+void ADS1115_COMM::scanSingleEnded() {
+
+    int numChannel = 4;
+    for (int i = 0; i < numDevices; i++){ 
+        for (int j = 0; j < numChannel  ; j++) {
+            rawInputs[i][j] = adsArray[i].readADC_SingleEnded(j);
+            analogValues[i][j] = ADS1115_COMM::mapFloat(rawInputs[i][j],-32768,32768,-24.576,24.576);
+        }
+    }
+}
+
+void ADS1115_COMM::setup() {
+        // The ADC input range (or gain) can be changed via the following
     // functions, but be careful never to exceed VDD +0.3V max, or to
     // exceed the upper and lower limits if you adjust the input range!
     // Setting these values incorrectly may destroy your ADC!
@@ -52,47 +58,10 @@ ADS1115_COMM::ADS1115_COMM () {
     adsArray[1] = ads2;
     adsArray[2] = ads3;
     adsArray[3] = ads4;
-
 }
 
-// void ADS1115_COMM::addDeviceChannel(String deviceAddr, int channel) {
-//     Adafruit_ADS1115* device;
-//     switch (deviceAddr)
-//     {
-//         case "GND"
-//             device = ads1;
-//             break;
-//         case "VDD"
-//             device = ads2;
-//             break;
-//         case "SDA"
-//             device = ads3;
-//             break;
-//         case "SCL"
-//             device = ads4;
-//             break;
-//         default:
-//             Serial.println("something is wrong: Error - 9001");
-//             break;
-//     }
-//     deviceChannel2Scan.push_back(DeviceChannel2Scan(device, channel));
-// }
-
-
-float ADS1115_COMM::mapFloat(float val, float fromLow, float fromHigh, float toLow, float toHigh) {
-    return (val - fromLow) / (fromHigh - fromLow) * (toHigh - toLow) + toLow;
-}
-
-
-void ADS1115_COMM::scanSingleEnded() {
-
-    int numChannel = 4;
-    for (int i = 0; i < numDevices; i++){ 
-        for (int j = 0; j < numChannel  ; j++) {
-            rawInputs[i][j] = adsArray[i].readADC_SingleEnded(j);
-            analogValues[i][j] = ADS1115_COMM::mapFloat(rawInputs[i][j],-32768,32768,-24.576,24.576);
-        }
-    }
+void ADS1115_COMM::loop() {
+    scanSingleEnded();
 }
 
 // Not used
