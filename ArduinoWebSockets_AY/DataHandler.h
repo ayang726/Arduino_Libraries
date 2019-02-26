@@ -14,4 +14,6 @@ struct SocketData {
     String parsedString;
 };
 
+
+
 #endif
