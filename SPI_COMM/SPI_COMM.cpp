@@ -6,51 +6,48 @@
 
 #include "SPI_COMM.h"
 
-int CSPIN = 9;
-const int SSPIN = 10;
-// const int DD_MOSI = DDB3;
-// const int DD_MISO = DDB4;
-// const int DD_SCK = DDB5;
-const int PIN_MOSI = 11;
-const int PIN_MISO = 12;
-const int PIN_SCK = 13;
+int PIN_CS = 9;
+int PIN_SS = 10;
+int PIN_MOSI = 11;
+int PIN_MISO = 12;
+int PIN_SCK = 13;
 
 
-SPI_COMM::SPI_COMM(/* args */)
+SPIClass::SPIClass(/* args */)
 {
 }
 
-SPI_COMM::~SPI_COMM()
+SPIClass::~SPIClass()
 {
 }
 
-void SPI_COMM::masterInit()  {
+void SPIClass::masterInit()  {
 //  DDRB = (1<<DD_MOSI)|(1<<DD_SCK);
 // Setting SPI enable, Mode as Master, Speed as Clock_fre/16
-    pinMode(SSPIN,OUTPUT);
-    digitalWrite(SSPIN, HIGH);
-    pinMode(CSPIN,OUTPUT);
-    digitalWrite(CSPIN, HIGH);
+    pinMode(PIN_SS,OUTPUT);
+    digitalWrite(PIN_SS, HIGH);
+    pinMode(PIN_CS,OUTPUT);
+    digitalWrite(PIN_CS, HIGH);
     pinMode(PIN_MOSI, OUTPUT);
     pinMode(PIN_SCK, OUTPUT);
     SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPR0);
 }
 
-void SPI_COMM::masterInit(int csPin) {
-    CSPIN = csPin;
+void SPIClass::masterInit(int csPin) {
+    PIN_CS = csPin;
     masterInit();
 }
 
-void SPI_COMM::slaveInit() {
+void SPIClass::slaveInit() {
 //  DDRB = (1<<DD_MISO);
 // Setting SPI enable
-    pinMode(SSPIN, INPUT);
+    pinMode(PIN_SS, INPUT);
     pinMode(PIN_MISO, OUTPUT);
     SPCR = (1<<SPE);
 }
 
 // Write to the SPI bus (MOSI pin) and also receive (MISO pin)
-uint8_t SPI_COMM::transfer(uint8_t data) {
+uint8_t SPIClass::transfer(uint8_t data) {
     SPDR = data;
     /*
         * The following NOP introduces a small delay that can prevent the wait
@@ -63,7 +60,7 @@ uint8_t SPI_COMM::transfer(uint8_t data) {
     return SPDR;
 }
 
-void SPI_COMM::transfer(void *buf, size_t count) {
+void SPIClass::transfer(void *buf, size_t count) {
     if (count == 0) return;
     uint8_t *p = (uint8_t *)buf;
     SPDR = *p;
@@ -77,3 +74,6 @@ void SPI_COMM::transfer(void *buf, size_t count) {
     while (!(SPSR & _BV(SPIF))) ;
     *p = SPDR;
 }
+
+void SPIClass::attachInterrupt() { SPCR |= _BV(SPIE); }
+void SPIClass::detachInterrupt() { SPCR &= ~_BV(SPIE); }

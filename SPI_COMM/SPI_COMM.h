@@ -3,18 +3,20 @@
 
 #include <Arduino.h>
 
-class SPI_COMM
+class SPIClass
 {
 private:
 public:
     int CSPIN;
-    SPI_COMM(/* args */);
-    ~SPI_COMM();
+    SPIClass(/* args */);
+    ~SPIClass();
     void masterInit();
     void masterInit(int);
     void slaveInit();
     uint8_t transfer(uint8_t);
     void transfer(void*, size_t);
+    void attachInterrupt();
+    void detachInterrupt();
 };
 
 

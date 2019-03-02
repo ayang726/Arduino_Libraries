@@ -27,8 +27,8 @@ class ADS1115_COMM{
         void scanSingleEnded();
 		float sixteenBitToAnalogConversion(int);
 
-		uint16_t readRawValueFrom(int, int);
-		float readAnalogValueFrom(int, int);
+		uint16_t readRawValueFrom(int deviceNum, int channel);
+		float readAnalogValueFrom(int deviceNum, int channel);
 		float mapFloat(float, float, float, float, float);
 };
 
